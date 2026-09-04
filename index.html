@@ -41,14 +41,24 @@
 
     html { scroll-behavior: smooth; }
 
-    /* CHANGES MADE HERE: Full screen setup */
     body {
       font-family: 'Montserrat', sans-serif;
       background-color: var(--bg-0);
       color: #e0e0e0;
       min-height: 100vh;
-      padding: 0; /* Removed 10px padding */
-      margin: 0;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* Container for Desktop & Mobile centering */
+    .app-container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: var(--bg-1);
+      position: relative;
+      overflow-x: hidden;
+      box-shadow: 0 0 50px rgba(0,0,0,0.8);
     }
 
     /* Signature: brushed-metal text */
@@ -67,19 +77,6 @@
       50% { background-position: 100% 50%; }
     }
 
-    /* CHANGES MADE HERE: Removed max-width 390px, border-radius, and box-shadow */
-    .mobile-screen {
-      width: 100%;
-      max-width: 100%; /* Changed from 390px */
-      background-color: var(--bg-1);
-      border-radius: 0px; /* Changed from 20px */
-      overflow-x: hidden;
-      box-shadow: none; /* Removed heavy frame shadow */
-      border: none; /* Removed outer border */
-      position: relative;
-      min-height: 100vh;
-    }
-
     .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
     .reveal.in-view { opacity: 1; transform: translateY(0); }
     .reveal-scale { opacity: 0; transform: scale(0.94); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
@@ -87,7 +84,7 @@
 
     /* HEADER */
     header {
-      padding: 16px 20px;
+      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -99,13 +96,30 @@
       z-index: 10;
       transition: padding 0.3s var(--ease), box-shadow 0.3s var(--ease);
     }
-    header.scrolled { padding: 10px 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+    header.scrolled { padding: 12px 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
 
     .brand { display: flex; align-items: center; gap: 12px; }
     .logo-img { height: 32px; width: auto; object-fit: contain; transition: height 0.3s var(--ease); filter: grayscale(1) brightness(1.3); }
     header.scrolled .logo-img { height: 26px; }
     .brand-name-img { height: 22px; width: auto; object-fit: contain; transition: height 0.3s var(--ease); filter: grayscale(1) brightness(1.3); }
     header.scrolled .brand-name-img { height: 18px; }
+
+    /* Desktop Navigation Links */
+    .desktop-nav {
+      display: none;
+      list-style: none;
+      gap: 20px;
+      align-items: center;
+    }
+    .desktop-nav a {
+      color: #c4c4c8;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: color 0.3s ease;
+    }
+    .desktop-nav a:hover { color: #ffffff; }
 
     .menu-btn {
       cursor: pointer;
@@ -116,7 +130,11 @@
       border-radius: 8px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.03);
-      transition: background 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.2s var(--ease);
+      transition: background 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.2s var(--ease), box-shadow 0.3s ease;
+    }
+    .menu-btn:hover {
+      box-shadow: 0 0 12px rgba(255,255,255,0.2);
+      transform: scale(1.05);
     }
     .menu-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.08); }
 
@@ -139,13 +157,11 @@
     .menu-btn.open .hamburger span:nth-child(2) { opacity: 0; }
     .menu-btn.open .hamburger span:nth-child(3) { top: 5px; transform: rotate(-45deg); }
 
-    /* NAV DRAWER */
+    /* NAV DRAWER (For Mobile View) */
     .nav-drawer {
-      position: fixed; /* Changed to fixed for better mobile response */
+      position: fixed;
       top: 0; right: -100%;
-      width: 280px; /* Set fixed width for drawer */
-      max-width: 80%;
-      height: 100%;
+      width: 75%; max-width: 300px; height: 100%;
       background: #0c0c0e;
       border-left: 1px solid var(--line);
       box-shadow: -10px 0 25px rgba(0,0,0,0.8);
@@ -186,7 +202,7 @@
       border-radius: 6px;
       transition: color 0.3s ease, background 0.3s ease, padding-left 0.3s ease;
     }
-    .drawer-menu li a:active { color: #ffffff; background: rgba(255,255,255,0.06); padding-left: 14px; }
+    .drawer-menu li a:hover, .drawer-menu li a:active { color: #ffffff; background: rgba(255,255,255,0.06); padding-left: 14px; }
     .drawer-divider { height: 1px; background: var(--line); margin: 10px 0; }
 
     /* HERO */
@@ -194,19 +210,25 @@
       position: relative;
       background:
         linear-gradient(rgba(6, 6, 7, 0.8), rgba(6, 6, 7, 0.97)),
-        url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80') center 40%/cover;
-      filter: grayscale(0.4);
-      padding: 60px 20px 55px;
+        url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=80') center 40%/cover;
+      filter: grayscale(0.2);
+      padding: 80px 20px 70px;
       text-align: center;
       border-bottom: 1px solid var(--line);
       overflow: hidden;
+      transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
     }
+    
+    .hero:hover {
+      box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.08);
+    }
+
     .hero::before {
       content: '';
       position: absolute;
       top: -50%; left: -20%;
       width: 140%; height: 200%;
-      background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%);
+      background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
       animation: sweep 5s ease-in-out infinite;
       pointer-events: none;
     }
@@ -216,26 +238,39 @@
       100% { transform: translateX(-30%); }
     }
 
-    .hero-eyebrow { font-size: 0.62rem; letter-spacing: 3px; color: #6d6d72; text-transform: uppercase; margin-bottom: 14px; opacity: 0; animation: fadeUp 0.8s var(--ease) 0.15s forwards; }
-    .hero h1 { font-family: 'Cinzel', serif; font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 14px; text-transform: uppercase; line-height: 1.5; color: #f2f2f3; opacity: 0; animation: fadeUp 0.9s var(--ease) 0.3s forwards; }
-    .hero p { font-size: 0.75rem; color: #a8a8ad; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; opacity: 0; animation: fadeUp 0.9s var(--ease) 0.5s forwards; }
+    .hero-eyebrow { font-size: 0.7rem; letter-spacing: 3px; color: #8e8e93; text-transform: uppercase; margin-bottom: 14px; opacity: 0; animation: fadeUp 0.8s var(--ease) 0.15s forwards; }
+    .hero h1 { font-family: 'Cinzel', serif; font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 14px; text-transform: uppercase; line-height: 1.4; color: #f2f2f3; opacity: 0; animation: fadeUp 0.9s var(--ease) 0.3s forwards; }
+    .hero p { font-size: 0.85rem; color: #a8a8ad; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; opacity: 0; animation: fadeUp 0.9s var(--ease) 0.5s forwards; }
 
     @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Trust strip */
-    .trust-strip { display: flex; justify-content: space-around; padding: 16px 14px; background: #08080a; border-bottom: 1px solid var(--line-soft); }
-    .trust-item { text-align: center; }
-    .trust-num { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 700; }
-    .trust-label { font-size: 0.55rem; color: var(--text-dim); letter-spacing: 0.6px; text-transform: uppercase; margin-top: 3px; }
+    /* Trust Strip: Floating Animation */
+    .trust-strip { 
+      display: flex; 
+      justify-content: space-around; 
+      padding: 20px 14px; 
+      background: #08080a; 
+      border-bottom: 1px solid var(--line-soft);
+      animation: floatBanner 4s ease-in-out infinite alternate;
+    }
+    
+    @keyframes floatBanner {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-4px); }
+    }
 
-    /* Content */
-    .content { padding: 25px 20px; background: var(--bg-2); max-width: 600px; margin: 0 auto; }
+    .trust-item { text-align: center; }
+    .trust-num { font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: 700; }
+    .trust-label { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.6px; text-transform: uppercase; margin-top: 3px; }
+
+    /* Content Area & Responsive Grid System */
+    .content { padding: 35px 24px; background: var(--bg-2); }
 
     .section-title {
       font-family: 'Cinzel', serif;
-      font-size: 0.95rem;
-      margin-top: 30px;
-      margin-bottom: 18px;
+      font-size: 1.05rem;
+      margin-top: 35px;
+      margin-bottom: 22px;
       letter-spacing: 1.5px;
       border-left: 2px solid #dcdce0;
       padding-left: 10px;
@@ -243,43 +278,48 @@
       color: #f0f0f1;
     }
 
-    .about-box p { font-size: 0.83rem; color: var(--text-body); line-height: 1.7; font-weight: 300; }
+    .about-box p { font-size: 0.88rem; color: var(--text-body); line-height: 1.8; font-weight: 300; }
 
-    /* Feature Cards */
-    .feature-card {
+    /* Responsive Grid Containers */
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    /* Cards Styling */
+    .feature-card, .service-card, .price-card {
       background: linear-gradient(145deg, var(--panel-2), var(--panel));
       border: 1px solid var(--line);
-      padding: 16px;
-      border-radius: 8px;
-      margin-bottom: 14px;
-      transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease), transform 0.35s var(--ease);
+      padding: 20px;
+      border-radius: 10px;
+      transition: all 0.35s var(--ease);
+      position: relative;
     }
-    .feature-card:active { transform: scale(0.98); border-color: rgba(255,255,255,0.35); box-shadow: 0 4px 15px rgba(255,255,255,0.05); }
-    .feature-card h4 { font-size: 0.85rem; margin-bottom: 6px; font-weight: 600; color: #f0f0f1; }
-    .feature-card p { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; }
+
+    .feature-card:hover, .service-card:hover, .price-card:hover {
+      transform: translateY(-5px) scale(1.01);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.08), 0 0 15px rgba(255, 255, 255, 0.03);
+    }
+    
+    .feature-card:active, .service-card:active { transform: scale(0.98); }
+    .feature-card h4 { font-size: 0.9rem; margin-bottom: 8px; font-weight: 600; color: #f0f0f1; }
+    .feature-card p { font-size: 0.78rem; color: var(--text-dim); line-height: 1.6; }
 
     /* Service Cards */
-    .service-card {
-      background: linear-gradient(145deg, var(--panel-2), var(--panel));
-      border: 1px solid var(--line);
-      padding: 16px;
-      border-radius: 8px;
-      margin-bottom: 14px;
-      cursor: pointer;
-      transition: border-color 0.35s var(--ease), background 0.35s var(--ease), box-shadow 0.35s var(--ease);
-    }
-    .service-card:active { transform: scale(0.99); }
-    .service-card.active { border-color: #dcdce0; background: #1b1b1e; box-shadow: 0 4px 15px rgba(255,255,255,0.06); }
+    .service-card { cursor: pointer; }
+    .service-card.active { border-color: #dcdce0; background: #1b1b1e; box-shadow: 0 6px 20px rgba(255,255,255,0.1); }
 
     .service-header { display: flex; justify-content: space-between; align-items: center; }
-    .service-header h4 { font-size: 0.85rem; font-weight: 600; color: #f0f0f1; }
+    .service-header h4 { font-size: 0.9rem; font-weight: 600; color: #f0f0f1; }
 
-    .arrow-icon { font-size: 0.7rem; color: #c8c8cc; transition: transform 0.35s var(--ease), color 0.35s var(--ease); }
+    .arrow-icon { font-size: 0.75rem; color: #c8c8cc; transition: transform 0.35s var(--ease), color 0.35s var(--ease); }
     .service-card.active .arrow-icon { transform: rotate(180deg); color: #fff; }
 
     .service-desc { max-height: 0; overflow: hidden; transition: max-height 0.45s var(--ease), margin-top 0.35s var(--ease), padding-top 0.35s var(--ease); }
     .service-card.active .service-desc { max-height: 150px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
-    .service-desc p { font-size: 0.76rem; color: #a8a8ad; line-height: 1.6; }
+    .service-desc p { font-size: 0.8rem; color: #a8a8ad; line-height: 1.6; }
 
     .b2b-badge {
       font-size: 0.55rem;
@@ -298,15 +338,20 @@
       display: flex; align-items: center; gap: 14px;
       margin-bottom: 12px;
       background: var(--panel);
-      padding: 14px;
+      padding: 16px;
       border-radius: 8px;
       border: 1px solid var(--line-soft);
       position: relative;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .step-item:hover {
+      transform: translateX(4px);
+      border-color: rgba(255,255,255,0.2);
     }
     .step-item:not(:last-child)::after {
       content: '';
       position: absolute;
-      left: 27px; top: 100%;
+      left: 29px; top: 100%;
       width: 1px; height: 12px;
       background: linear-gradient(to bottom, rgba(255,255,255,0.25), transparent);
     }
@@ -314,50 +359,41 @@
       font-family: 'Cinzel', serif;
       background: linear-gradient(135deg, #ffffff, #c8c8cc, #9a9aa0);
       color: #000;
-      font-size: 0.8rem; font-weight: 800;
-      width: 26px; height: 26px;
+      font-size: 0.85rem; font-weight: 800;
+      width: 28px; height: 28px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .step-text { font-size: 0.78rem; color: var(--text-body); }
+    .step-text { font-size: 0.82rem; color: var(--text-body); }
 
     /* PRICING */
     .pricing-note {
-      font-size: 0.68rem;
+      font-size: 0.72rem;
       color: var(--text-dim);
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       line-height: 1.6;
       font-style: italic;
     }
 
-    .price-card {
-      background: linear-gradient(145deg, var(--panel-2), var(--panel));
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 18px;
-      margin-bottom: 14px;
-      transition: border-color 0.35s var(--ease), transform 0.33s var(--ease);
-    }
-    .price-card:active { transform: scale(0.99); }
-    .price-card.featured { border-color: #dcdce0; box-shadow: 0 4px 20px rgba(255,255,255,0.08); position: relative; }
+    .price-card.featured { border-color: #dcdce0; box-shadow: 0 4px 20px rgba(255,255,255,0.08); }
     .price-card.featured::before {
       content: 'MOST BOOKED';
       position: absolute;
       top: -9px; right: 14px;
       background: linear-gradient(135deg, #ffffff, #c8c8cc, #9a9aa0);
       color: #000;
-      font-size: 0.5rem;
+      font-size: 0.52rem;
       font-weight: 800;
       letter-spacing: 0.5px;
       padding: 3px 8px;
       border-radius: 4px;
     }
 
-    .price-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .price-head h4 { font-size: 0.88rem; font-weight: 700; color: #f2f2f3; }
+    .price-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .price-head h4 { font-size: 0.95rem; font-weight: 700; color: #f2f2f3; }
     .price-badge {
-      font-size: 0.55rem;
+      font-size: 0.58rem;
       font-weight: 700;
       letter-spacing: 0.5px;
       text-transform: uppercase;
@@ -373,11 +409,11 @@
       border: none;
     }
 
-    .price-features { list-style: none; margin-bottom: 14px; }
+    .price-features { list-style: none; margin-bottom: 18px; }
     .price-features li {
-      font-size: 0.74rem;
+      font-size: 0.78rem;
       color: var(--text-body);
-      padding: 4px 0;
+      padding: 5px 0;
       padding-left: 18px;
       position: relative;
       line-height: 1.5;
@@ -393,8 +429,8 @@
       display: block;
       text-align: center;
       width: 100%;
-      padding: 10px 0;
-      font-size: 0.72rem;
+      padding: 12px 0;
+      font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 0.5px;
       text-decoration: none;
@@ -402,8 +438,14 @@
       background: linear-gradient(135deg, #1e1e21, #141416);
       color: #f0f0f1;
       border: 1px solid var(--line);
-      transition: transform 0.2s var(--ease), background 0.3s ease;
+      transition: all 0.3s var(--ease);
     }
+    
+    .price-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
+    }
+
     .price-card.featured .price-btn {
       background: linear-gradient(135deg, #ffffff, #c8c8cc, #9a9aa0);
       color: #000;
@@ -411,20 +453,26 @@
     }
     .price-btn:active { transform: scale(0.97); }
 
-    /* Booking Section */
+    /* Booking Section & Action Buttons */
     .booking-section {
       background: linear-gradient(145deg, var(--panel-2), var(--panel));
       border: 1px solid #dcdce0;
-      padding: 24px 18px;
+      padding: 30px 20px;
       border-radius: 12px;
       text-align: center;
-      margin-top: 35px;
+      margin-top: 40px;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.06);
     }
-    .booking-section h3 { font-family: 'Cinzel', serif; font-size: 1rem; margin-bottom: 8px; letter-spacing: 1px; color: #f2f2f3; }
-    .booking-section p { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 20px; }
+    .booking-section h3 { font-family: 'Cinzel', serif; font-size: 1.1rem; margin-bottom: 8px; letter-spacing: 1px; color: #f2f2f3; }
+    .booking-section p { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 22px; }
 
-    .cta-buttons { display: flex; flex-direction: column; gap: 12px; }
+    .cta-buttons { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 14px; 
+      max-width: 500px;
+      margin: 0 auto;
+    }
 
     .btn-action {
       position: relative;
@@ -434,36 +482,74 @@
       align-items: center;
       gap: 8px;
       width: 100%;
-      padding: 13px 0;
+      padding: 14px 0;
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 700;
       text-decoration: none;
-      border-radius: 6px;
+      border-radius: 8px;
       letter-spacing: 0.5px;
-      transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+      transition: all 0.3s var(--ease);
+    }
+
+    .btn-action:hover {
+      transform: scale(1.03);
     }
     .btn-action:active { transform: scale(0.97); }
 
-    .btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); }
+    .btn-whatsapp { 
+      background: linear-gradient(135deg, #25D366, #128C7E); 
+      color: #fff; 
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); 
+    }
+    .btn-whatsapp:hover {
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+    }
+
     .btn-call {
       background: linear-gradient(135deg, #ffffff 0%, #dcdce0 25%, #9a9aa0 50%, #e8e8ec 75%, #b8b8bd 100%);
       background-size: 200% 200%;
       color: #000;
-      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.12);
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
       animation: shimmer 6s ease-in-out infinite;
+    }
+    .btn-call:hover {
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.5);
     }
 
     .ripple { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.35); transform: scale(0); animation: ripple-anim 0.6s ease-out; pointer-events: none; }
     @keyframes ripple-anim { to { transform: scale(3); opacity: 0; } }
 
-    footer { padding: 22px; background: #050506; border-top: 1px solid var(--line); font-size: 0.75rem; color: var(--text-dim); text-align: center; }
+    footer { padding: 25px; background: #050506; border-top: 1px solid var(--line); font-size: 0.78rem; color: var(--text-dim); text-align: center; }
     footer div { margin-bottom: 6px; }
+
+    /* RESPONSIVE MEDIA QUERIES FOR DESKTOP & TABLETS */
+    @media (min-width: 768px) {
+      .hero { padding: 110px 40px 90px; }
+      .hero h1 { font-size: 2.2rem; }
+      .hero p { font-size: 1rem; }
+
+      .desktop-nav { display: flex; }
+      .menu-btn { display: none; }
+
+      .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .pricing-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .cta-buttons {
+        flex-direction: row;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div class="mobile-screen">
+  <div class="app-container">
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="closeNav()"></div>
 
@@ -476,16 +562,25 @@
         <li><a href="#pricing" onclick="closeNav()">💳 Pricing</a></li>
         <li><a href="#services" onclick="closeNav()">🏢 Corporate B2B</a></li>
         <div class="drawer-divider"></div>
-        <li><a href="https://wa.me/919526249645?text=Hello%20ChauffX,%20I%20want%20to%20book%20a%20driver." target="_blank">💬 WhatsApp Booking</a></li>
+        <li><a href="https://wa.me/919526249645?text=Hello%20ChchauffX,%20I%20want%20to%20book%20a%20driver." target="_blank">💬 WhatsApp Booking</a></li>
         <li><a href="tel:+919526249645">📞 Direct Call</a></li>
       </ul>
     </div>
 
     <header id="siteHeader">
       <div class="brand">
-        <img src="chauffx_header_logo_white.jpg" alt="ChauffX Logo" class="logo-img">
+        <img src="chauffx_header_logo_white.jpg" alt="ChchauffX Logo" class="logo-img">
         <img src="chauffx_brand_name.jpg" alt="CH4UFFX" class="brand-name-img">
       </div>
+
+      <ul class="desktop-nav">
+        <li><a href="#">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="https://wa.me/919526249645" target="_blank">Contact</a></li>
+      </ul>
+
       <div class="menu-btn" id="menuBtn" onclick="openNav()">
         <div class="hamburger"><span></span><span></span><span></span></div>
       </div>
@@ -508,95 +603,101 @@
       <div id="about" class="section-title silver-text reveal">ABOUT US</div>
       <div class="about-box reveal">
         <p>
-          ChauffX provides luxury-grade, background-verified, and highly trained chauffeurs for personal car owners as well as customized B2B corporate mobility solutions. Elevate your everyday commute, executive travel, and long-distance journeys with absolute comfort.
+          ChchauffX provides luxury-grade, background-verified, and highly trained chauffeurs for personal car owners as well as customized B2B corporate mobility solutions. Elevate your everyday commute, executive travel, and long-distance journeys with absolute comfort.
         </p>
       </div>
 
       <div class="section-title silver-text reveal">WHY CHOOSE US</div>
 
-      <div class="feature-card reveal">
-        <h4 class="silver-text">🛡️ Background Verified</h4>
-        <p>Every chauffeur undergoes rigorous police verification and background checks for supreme safety.</p>
-      </div>
+      <div class="grid-container">
+        <div class="feature-card reveal">
+          <h4 class="silver-text">🛡️ Background Verified</h4>
+          <p>Every chauffeur undergoes rigorous police verification and background checks for supreme safety.</p>
+        </div>
 
-      <div class="feature-card reveal">
-        <h4 class="silver-text">🚘 Skilled Across All Vehicles</h4>
-        <p>Expertly trained to handle Manual, Automatic, and high-end Luxury marques with precision care.</p>
-      </div>
+        <div class="feature-card reveal">
+          <h4 class="silver-text">🚘 Skilled Across All Vehicles</h4>
+          <p>Expertly trained to handle Manual, Automatic, and high-end Luxury marques with precision care.</p>
+        </div>
 
-      <div class="feature-card reveal">
-        <h4 class="silver-text">👔 Professional & Uniformed</h4>
-        <p>Groomed professionals who adhere strictly to corporate etiquette, punctuality, and complete discretion.</p>
+        <div class="feature-card reveal">
+          <h4 class="silver-text">👔 Professional & Uniformed</h4>
+          <p>Groomed professionals who adhere strictly to corporate etiquette, punctuality, and complete discretion.</p>
+        </div>
       </div>
 
       <div id="services" class="section-title silver-text reveal">OUR SERVICES</div>
 
-      <div class="service-card reveal" onclick="toggleService(this)">
-        <div class="service-header"><h4 class="silver-text">⏱️ Hourly Driver Supply</h4><span class="arrow-icon">▼</span></div>
-        <div class="service-desc"><p>Hire an elite chauffeur for flexible hourly durations. Ideal for shopping, city meetings, personal errands, and hassle-free transit.</p></div>
-      </div>
+      <div class="grid-container">
+        <div class="service-card reveal" onclick="toggleService(this)">
+          <div class="service-header"><h4 class="silver-text">⏱️ Hourly Driver Supply</h4><span class="arrow-icon">▼</span></div>
+          <div class="service-desc"><p>Hire an elite chauffeur for flexible hourly durations. Ideal for shopping, city meetings, personal errands, and hassle-free transit.</p></div>
+        </div>
 
-      <div class="service-card reveal" onclick="toggleService(this)">
-        <div class="service-header"><h4 class="silver-text">🛣️ Outstation Trips</h4><span class="arrow-icon">▼</span></div>
-        <div class="service-desc"><p>Planning long road trips? Sit back in the luxury of your back seat while our experienced highway drivers handle long-distance travel effortlessly.</p></div>
-      </div>
+        <div class="service-card reveal" onclick="toggleService(this)">
+          <div class="service-header"><h4 class="silver-text">🛣️ Outstation Trips</h4><span class="arrow-icon">▼</span></div>
+          <div class="service-desc"><p>Planning long road trips? Sit back in the luxury of your back seat while our experienced highway drivers handle long-distance travel effortlessly.</p></div>
+        </div>
 
-      <div class="service-card reveal" onclick="toggleService(this)">
-        <div class="service-header"><h4 class="silver-text">🌙 Night & Party Drives</h4><span class="arrow-icon">▼</span></div>
-        <div class="service-desc"><p>Enjoy private celebrations and late-night events with complete peace of mind. Our safe drivers escort you home comfortably in your own car.</p></div>
-      </div>
+        <div class="service-card reveal" onclick="toggleService(this)">
+          <div class="service-header"><h4 class="silver-text">🌙 Night & Party Drives</h4><span class="arrow-icon">▼</span></div>
+          <div class="service-desc"><p>Enjoy private celebrations and late-night events with complete peace of mind. Our safe drivers escort you home comfortably in your own car.</p></div>
+        </div>
 
-      <div class="service-card reveal" onclick="toggleService(this)">
-        <div class="service-header"><h4 class="silver-text">🏢 Corporate B2B Solutions <span class="b2b-badge">B2B</span></h4><span class="arrow-icon">▼</span></div>
-        <div class="service-desc"><p>Tailored corporate mobility solutions for businesses, executive transit, VIP delegations, and outsourced monthly chauffeur management with structured billing.</p></div>
-      </div>
+        <div class="service-card reveal" onclick="toggleService(this)">
+          <div class="service-header"><h4 class="silver-text">🏢 Corporate B2B Solutions <span class="b2b-badge">B2B</span></h4><span class="arrow-icon">▼</span></div>
+          <div class="service-desc"><p>Tailored corporate mobility solutions for businesses, executive transit, VIP delegations, and outsourced monthly chauffeur management with structured billing.</p></div>
+        </div>
 
-      <div class="service-card reveal" onclick="toggleService(this)">
-        <div class="service-header"><h4 class="silver-text">🔑 Event & Wedding Valet</h4><span class="arrow-icon">▼</span></div>
-        <div class="service-desc"><p>Impeccable valet management and dedicated chauffeurs for high-profile weddings, luxury events, and corporate summits.</p></div>
-      </div>
+        <div class="service-card reveal" onclick="toggleService(this)">
+          <div class="service-header"><h4 class="silver-text">🔑 Event & Wedding Valet</h4><span class="arrow-icon">▼</span></div>
+          <div class="service-desc"><p>Impeccable valet management and dedicated chauffeurs for high-profile weddings, luxury events, and corporate summits.</p></div>
+        </div>
 
-      <div class="service-card reveal" onclick="toggleService(this)">
-        <div class="service-header"><h4 class="silver-text">✈️ Airport Transfers</h4><span class="arrow-icon">▼</span></div>
-        <div class="service-desc"><p>Punctual, stress-free airport pickup and drop services in your vehicle, tailored to your flight schedule.</p></div>
-      </div>
+        <div class="service-card reveal" onclick="toggleService(this)">
+          <div class="service-header"><h4 class="silver-text">✈️ Airport Transfers</h4><span class="arrow-icon">▼</span></div>
+          <div class="service-desc"><p>Punctual, stress-free airport pickup and drop services in your vehicle, tailored to your flight schedule.</p></div>
+        </div>
 
-      <div class="service-card reveal" onclick="toggleService(this)">
-        <div class="service-header"><h4 class="silver-text">🚕 Taxi Service</h4><span class="arrow-icon">▼</span></div>
-        <div class="service-desc"><p>Whether it’s daily city commutes, airport transfers, or corporate business trips — experience seamless taxi services with ChauffX.</p></div>
+        <div class="service-card reveal" onclick="toggleService(this)">
+          <div class="service-header"><h4 class="silver-text">🚕 Taxi Service</h4><span class="arrow-icon">▼</span></div>
+          <div class="service-desc"><p>Whether it’s daily city commutes, airport transfers, or corporate business trips — experience seamless taxi services with ChchauffX.</p></div>
+        </div>
       </div>
 
       <div id="pricing" class="section-title silver-text reveal">PRICING</div>
       <div class="pricing-note reveal">Transparent, affordable rates — tailored to your trip.</div>
 
-      <div class="price-card reveal">
-        <div class="price-head"><h4>Hourly</h4><span class="price-badge">Pocket-Friendly</span></div>
-        <ul class="price-features">
-          <li>Verified uniformed chauffeur</li>
-          <li>Manual & automatic vehicles</li>
-          <li>Billed by the hour, no surprises</li>
-        </ul>
-        <a href="https://wa.me/919526249645?text=Hi%20ChauffX,%20I%27m%20interested%20in%20the%20Hourly%20plan." target="_blank" class="price-btn">Get a Quote</a>
-      </div>
+      <div class="grid-container pricing-grid">
+        <div class="price-card reveal">
+          <div class="price-head"><h4>Hourly</h4><span class="price-badge">Pocket-Friendly</span></div>
+          <ul class="price-features">
+            <li>Verified uniformed chauffeur</li>
+            <li>Manual & automatic vehicles</li>
+            <li>Billed by the hour, no surprises</li>
+          </ul>
+          <a href="https://wa.me/919526249645?text=Hi%20ChchauffX,%20I%27m%20interested%20in%20the%20Hourly%20plan." target="_blank" class="price-btn">Get a Quote</a>
+        </div>
 
-      <div class="price-card featured reveal">
-        <div class="price-head"><h4>Outstation</h4><span class="price-badge">Best Value</span></div>
-        <ul class="price-features">
-          <li>Highway-experienced drivers</li>
-          <li>Fair, distance-based pricing</li>
-          <li>Multi-day trips available</li>
-        </ul>
-        <a href="https://wa.me/919526249645?text=Hi%20ChauffX,%20I%27m%20interested%20in%20the%20Outstation%20plan." target="_blank" class="price-btn">Get a Quote</a>
-      </div>
+        <div class="price-card featured reveal">
+          <div class="price-head"><h4>Outstation</h4><span class="price-badge">Best Value</span></div>
+          <ul class="price-features">
+            <li>Highway-experienced drivers</li>
+            <li>Fair, distance-based pricing</li>
+            <li>Multi-day trips available</li>
+          </ul>
+          <a href="https://wa.me/919526249645?text=Hi%20ChchauffX,%20I%27m%20interested%20in%20the%20Outstation%20plan." target="_blank" class="price-btn">Get a Quote</a>
+        </div>
 
-      <div class="price-card reveal">
-        <div class="price-head"><h4>Corporate B2B</h4><span class="price-badge">Custom Plans</span></div>
-        <ul class="price-features">
-          <li>Dedicated fleet of chauffeurs</li>
-          <li>Volume-friendly monthly rates</li>
-          <li>One consolidated invoice</li>
-        </ul>
-        <a href="https://wa.me/919526249645?text=Hi%20ChauffX,%20I%27d%20like%20a%20Corporate%20B2B%20quote." target="_blank" class="price-btn">Talk to Sales</a>
+        <div class="price-card reveal">
+          <div class="price-head"><h4>Corporate B2B</h4><span class="price-badge">Custom Plans</span></div>
+          <ul class="price-features">
+            <li>Dedicated fleet of chauffeurs</li>
+            <li>Volume-friendly monthly rates</li>
+            <li>One consolidated invoice</li>
+          </ul>
+          <a href="https://wa.me/919526249645?text=Hi%20ChchauffX,%20I%27d%20like%20a%20Corporate%20B2B%20quote." target="_blank" class="price-btn">Talk to Sales</a>
+        </div>
       </div>
 
       <div class="section-title silver-text reveal">HOW IT WORKS</div>
@@ -609,7 +710,7 @@
         <h3 class="silver-text">CONNECT WITH US</h3>
         <p>Book your driver or inquire via call or WhatsApp.</p>
         <div class="cta-buttons">
-          <a href="https://wa.me/919526249645?text=Hello%20ChauffX,%20I%20would%20like%20to%20book%20a%20driver." target="_blank" class="btn-action btn-whatsapp"><span>💬</span> CHAT ON WHATSAPP</a>
+          <a href="https://wa.me/919526249645?text=Hello%20ChchauffX,%20I%20would%20like%20to%20book%20a%20driver." target="_blank" class="btn-action btn-whatsapp"><span>💬</span> CHAT ON WHATSAPP</a>
           <a href="tel:+919526249645" class="btn-action btn-call"><span>📞</span> CALL US NOW</a>
         </div>
       </div>
@@ -661,7 +762,7 @@
       else header.classList.remove('scrolled');
     });
 
-    document.querySelectorAll('.btn-action').forEach(btn => {
+    document.querySelectorAll('.btn-action, .price-btn').forEach(btn => {
       btn.addEventListener('click', function (e) {
         const rect = this.getBoundingClientRect();
         const ripple = document.createElement('span');
